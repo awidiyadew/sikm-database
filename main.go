@@ -14,27 +14,29 @@ func PrintToJSON(data any) {
 }
 
 func main() {
-	db, err := db.Connect(db.DBCredential{
+	db, err := db.ConnectGorm(db.DBCredential{
 		Host:         "localhost",
 		Username:     "postgres",
 		Password:     "P@ssw0rd",
-		DatabaseName: "marketplace-demo",
+		DatabaseName: "marketplace_s2",
 		Port:         5432,
 	})
 
-	if err != nil && db.Ping() != nil {
+	if err != nil {
 		log.Fatal("failed to connect db", err)
 	}
 
 	fmt.Println("connected to DB")
 
-	productRepo := repository.NewProductRepo(db)
+	// db.AutoMigrate(&model.Product{}, &model.Category{})
 
-	// products, err2 := productRepo.FindAll()
-	// if err2 != nil {
-	// 	fmt.Println("failed to get all products", err2)
-	// }
-	// PrintToJSON(products)
+	productRepo := repository.NewProductGormRepo(db)
+
+	products, err2 := productRepo.FindAll()
+	if err2 != nil {
+		fmt.Println("failed to get all products", err2)
+	}
+	PrintToJSON(products)
 
 	// p, err3 := productRepo.FindByID(5)
 	// if err3 != nil {
@@ -61,9 +63,9 @@ func main() {
 	// }
 
 	// JOIN example
-	pc, err6 := productRepo.FindDetail(4)
-	if err6 != nil {
-		fmt.Println("failed to get prd detail", err6)
-	}
-	PrintToJSON(pc)
+	// pc, err6 := productRepo.FindDetail(4)
+	// if err6 != nil {
+	// 	fmt.Println("failed to get prd detail", err6)
+	// }
+	// PrintToJSON(pc)
 }
