@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sikm-marketplace-db/db"
-	"sikm-marketplace-db/repository"
+	"sikm-marketplace-db/model"
 )
 
 func PrintToJSON(data any) {
@@ -30,7 +30,7 @@ func main() {
 
 	// db.AutoMigrate(&model.Product{}, &model.Category{})
 
-	productRepo := repository.NewProductGormRepo(db)
+	// productRepo := repository.NewProductGormRepo(db)
 
 	// products, err2 := productRepo.FindAll()
 	// if err2 != nil {
@@ -69,9 +69,16 @@ func main() {
 	// }
 
 	// JOIN example
-	pc, err6 := productRepo.FindDetail(4)
-	if err6 != nil {
-		fmt.Println("failed to get prd detail", err6)
-	}
-	PrintToJSON(pc)
+	// pc, err6 := productRepo.FindDetail(4)
+	// if err6 != nil {
+	// 	fmt.Println("failed to get prd detail", err6)
+	// }
+	// PrintToJSON(pc)
+
+	// example sub query
+	// select * from products p where p.category_id in (select id from categories c where id < 3)
+	var products []model.Product
+	subQuery := db.Model(&model.Category{}).Select("id").Where("id < 3")
+	_ = db.Where("category_id IN (?)", subQuery).Find(&products)
+	PrintToJSON(products)
 }
