@@ -9,6 +9,7 @@ type Product struct {
 	Name       string // name
 	Price      int    // price
 	CategoryID int    // category_id
+	Category   Category `gorm:"foreignKey:CategoryID"`
 }
 
 // table categories
