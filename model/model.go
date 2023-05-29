@@ -1,15 +1,22 @@
 package model
 
+import "gorm.io/gorm"
+
+// mapped to table products
 type Product struct {
-	ID         int
-	Name       string
-	Price      int
-	CategoryID int
+	gorm.Model `json:"-"`
+	ID         uint   `gorm:"primarykey;"`
+	Name       string // name
+	Price      int    // price
+	CategoryID int    // category_id
+	Category   Category `gorm:"foreignKey:CategoryID"`
 }
 
+// table categories
 type Category struct {
-	ID   int
-	Name string
+	gorm.Model `json:"-"`
+	ID         uint   `gorm:"primarykey"`
+	Name       string // name
 }
 
 type ProductCategory struct {
